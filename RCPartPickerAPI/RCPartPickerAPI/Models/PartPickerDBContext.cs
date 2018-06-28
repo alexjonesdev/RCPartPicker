@@ -6,15 +6,6 @@ namespace RCPartPickerAPI.Models
 {
     public partial class PartPickerDBContext : DbContext
     {
-        public PartPickerDBContext()
-        {
-        }
-
-        public PartPickerDBContext(DbContextOptions<PartPickerDBContext> options)
-            : base(options)
-        {
-        }
-
         public virtual DbSet<Part> Part { get; set; }
         public virtual DbSet<PartCategory> PartCategory { get; set; }
         public virtual DbSet<PartPartProperty> PartPartProperty { get; set; }
@@ -24,14 +15,17 @@ namespace RCPartPickerAPI.Models
         public virtual DbSet<RCCategory> RCCategory { get; set; }
         public virtual DbSet<RCSubcategory> RCSubcategory { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=localhost;Database=PartPickerDB;Trusted_Connection=True;");
-            }
-        }
+        //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //        {
+        //            if (!optionsBuilder.IsConfigured)
+        //            {
+        //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+        //                optionsBuilder.UseSqlServer(@"Server=localhost;Database=PartPickerDB;Trusted_Connection=True;");
+        //            }
+        //        }
+
+        public PartPickerDBContext(DbContextOptions<PartPickerDBContext> options) : base(options)
+        { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -69,6 +63,8 @@ namespace RCPartPickerAPI.Models
                     .WithMany(p => p.PartPartProperty)
                     .HasForeignKey(d => d.PartPropertyId)
                     .HasConstraintName("FK_Part_PartProperty_PartProperty");
+
+                //entity.HasKey(t => new { t.PartId, t.PartPropertyId });
             });
 
             modelBuilder.Entity<PartProperty>(entity =>
